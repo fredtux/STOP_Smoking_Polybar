@@ -6,11 +6,7 @@
 #include <unistd.h>
 
 int main() {
-    struct passwd *pw = getpwuid(getuid());
-    char *home = pw->pw_dir;
-    char fifopath[64] = "";
-    strcat(fifopath, home);
-    strcat(fifopath, "/.config/stopsmoking/fifopipe");
+    char *fifopath = "/tmp/fifostopsmoking";
 
     int fd = open(fifopath, O_RDONLY);
     if (fd < 0) {

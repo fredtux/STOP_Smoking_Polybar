@@ -184,11 +184,11 @@ void computeSleepTime(unsigned *sleepTime, unsigned *probabilityToSmoke, unsigne
     logOutputMsg(msg);
 }
 
-void tellToSmoke() {
+void tellToSmoke(unsigned today) {
     if (strlen(sharr) == 128) {
         memset(sharr, '\0', sizeof(sharr));
     }
-    sharr[strlen(sharr)] = (char)1;
+    sharr[strlen(sharr)] = (char)today;
     write(fifod, sharr, sizeof(sharr));
     logOutputMsg("Smoke!!!");
 }
@@ -198,7 +198,7 @@ void tryToSmoke(unsigned probabilityToSmoke, unsigned cigarettes, unsigned start
     int smoke = (rand() % 100) < probabilityToSmoke;
 
     if (smoke) {
-        tellToSmoke();
+        tellToSmoke(*today);
         --(*today);
         updateInConfig(cigarettes, starthour, finishhour, *today, dateadded, dateupdated, datelastquit);
     }
@@ -214,7 +214,7 @@ void tryToQuit(unsigned probabilityToSmoke, time_t *datelastquit, unsigned *ciga
     // struct tm tm2 = *localtime(&t2);
 
     int diff = difftime(t, t2) / (60 * 60 * 24);
-    
+
     if (diff >= 2) {
         srand(time(NULL));
         int quit = (rand() % 100) < (double)probabilityToSmoke / 2;
@@ -228,12 +228,7 @@ void tryToQuit(unsigned probabilityToSmoke, time_t *datelastquit, unsigned *ciga
 }
 
 void createFifo() {
-    /* Pipe */
-    char home[64] = "/home/";
-    strcat(home, getenv("USER"));
-    char pipeName[256] = "";
-    strcat(pipeName, home);
-    strcat(pipeName, "/.config/stopsmoking/fifopipe");
+    char *pipeName = "/tmp/fifostopsmoking";
 
     /* Make pipe */
     mkfifo(pipeName, 0666);
@@ -246,6 +241,16 @@ void createFifo() {
 
     /* Reset shared array */
     memset(sharr, '\0', sizeof(sharr));
+}
+
+void resetpipe(){
+    if (strlen(sharr) == 128) {
+        memset(sharr, '\0', sizeof(sharr));
+    }
+    sharr[strlen(sharr)] = (char)255;
+    write(fifod, sharr, sizeof(sharr));
+    logOutputMsg("Reseted pipe");
+    
 }
 
 int canTry(unsigned today, unsigned starthour, unsigned finishhour) {
@@ -273,7 +278,7 @@ void checkDayChange(unsigned *sleepTime, unsigned *probabilityToSmoke, unsigned 
 
     if (tm.tm_hour > finishhour && *today) {
         while (*today) {
-            tellToSmoke();
+            tellToSmoke(*today);
             --(*today);
         }
         updateInConfig(cigarettes, starthour, finishhour, *today, dateadded, dateupdated, datelastquit);
@@ -347,12 +352,22 @@ int main(void) {
 
     /* The Big Loop */
     while (1) {
+        /* Check for configuration changes*/
+        unsigned starthourbak = starthour, finishhourbak = finishhour, todaybak = today, dateaddedbak = dateadded;
+        readConfigData(&cigarettes, &starthour, &finishhour, &today, &dateadded, &dateupdated, &datelastquit);
+        if (starthourbak != starthour || finishhourbak != finishhour || todaybak != today || dateaddedbak != dateadded){
+            computeSleepTime(&sleepTime, &probabilityToSmoke, cigarettes, starthour, finishhour, today, dateadded, &dateupdated, datelastquit);
+            resetpipe();
+        }
+
+        /* Check if it can try */
         if (canTry(today, starthour, finishhour)) {
             checkDayChange(&sleepTime, &probabilityToSmoke, cigarettes, starthour, finishhour, &today, dateadded, &dateupdated, datelastquit);
             logOutputMsg("Another try");
             tryToSmoke(probabilityToSmoke, cigarettes, starthour, finishhour, &today, dateadded, &dateupdated, datelastquit);
             tryToQuit(probabilityToSmoke, &datelastquit, &cigarettes, &starthour, &finishhour, &today, &dateadded, &dateupdated);
         } else {
+            /* If it can't try, check for date change */
             checkDayChange(&sleepTime, &probabilityToSmoke, cigarettes, starthour, finishhour, &today, dateadded, &dateupdated, datelastquit);
         }
         // exit(EXIT_SUCCESS);

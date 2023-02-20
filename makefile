@@ -1,8 +1,10 @@
 CC = gcc
-CFLAGS = -Wall
+CFLAGS = -g -Wall
 LFLAGS =
 
-all: stopsmoking-config stopsmoking example-fifo
+.PHONY: all clean
+
+all: stopsmoking-config stopsmoking example-fifo stopsmoking-polybar
 
 stopsmoking-config: stopsmoking-config.c
 	$(CC) $(CFLAGS) -o stopsmoking-config stopsmoking-config.c $(LFLAGS)
@@ -13,5 +15,14 @@ stopsmoking: stopsmoking.c
 example-fifo: example-fifo.c
 	$(CC) $(CFLAGS) -o example-fifo example-fifo.c $(LFLAGS)
 
+stopsmoking-polybar: stopsmoking-polybar.c
+	$(CC) $(CFLAGS) -D_XOPEN_SOURCE=700 -o stopsmoking-polybar stopsmoking-polybar.c $(LFLAGS)
+
 clean:
-	$(RM) stopsmoking-config stopsmoking example-fifo
+	$(RM) stopsmoking-config stopsmoking example-fifo stopsmoking-polybar stopsmoking.service
+
+install:
+	./installer.sh
+
+uninstall:
+	./uninstaller.sh
