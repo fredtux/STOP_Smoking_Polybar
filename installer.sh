@@ -1,10 +1,4 @@
 #!/bin/bash
-if [[ $UID != 0 ]]; then
-    echo "Please run this script with sudo:"
-    echo "sudo make install"
-    exit 1
-fi
-
 echo "Create service file"
 echo "[Unit]
 Description=Stop Smoking Service
@@ -22,31 +16,31 @@ User=${USER}
 WantedBy=multi-user.target"> stopsmoking.service
 
 echo "Copy service"
-cp stopsmoking /usr/bin/stopsmoking
-chown root:root /usr/bin/stopsmoking
-chmod +x /usr/bin/stopsmoking
+sudo cp stopsmoking /usr/bin/stopsmoking
+sudo chown root:root /usr/bin/stopsmoking
+sudo chmod +x /usr/bin/stopsmoking
 
 echo "Copy configurer"
-cp stopsmoking-config /usr/bin/stopsmoking-config
-chown root:root /usr/bin/stopsmoking-config
-chmod +x /usr/bin/stopsmoking-config
+sudo cp stopsmoking-config /usr/bin/stopsmoking-config
+sudo chown root:root /usr/bin/stopsmoking-config
+sudo chmod +x /usr/bin/stopsmoking-config
 
 echo "Copy polybar client"
-cp stopsmoking-polybar /usr/bin/stopsmoking-polybar
-chown root:root /usr/bin/stopsmoking-polybar
-chmod +x /usr/bin/stopsmoking-polybar
+sudo cp stopsmoking-polybar /usr/bin/stopsmoking-polybar
+sudo chown root:root /usr/bin/stopsmoking-polybar
+sudo chmod +x /usr/bin/stopsmoking-polybar
 
 echo "Copy polybar module script"
-cp run_polybar_stopsmoking.sh /usr/bin/run_polybar_stopsmoking.sh
-chown root:root /usr/bin/run_polybar_stopsmoking.sh
-chmod +x /usr/bin/run_polybar_stopsmoking.sh
+sudo cp run_polybar_stopsmoking.sh /usr/bin/run_polybar_stopsmoking.sh
+sudo chown root:root /usr/bin/run_polybar_stopsmoking.sh
+sudo chmod +x /usr/bin/run_polybar_stopsmoking.sh
 
 echo "Runing initial config"
 /usr/bin/stopsmoking-config -c 20 -s 8 -f 23 -t 20
 
 echo "Copy service file"
-cp stopsmoking.service /etc/systemd/system/stopsmoking.service
-chown root:root /usr/bin/stopsmoking.service
+sudo cp stopsmoking.service /etc/systemd/system/stopsmoking.service
+sudo chown root:root /etc/systemd/system/stopsmoking.service
 
 echo "Enable service"
-systemctl enable stopsmoking
+sudo systemctl enable stopsmoking

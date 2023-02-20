@@ -7,6 +7,7 @@
 #include <sys/stat.h>
 #include <time.h>
 #include <unistd.h>
+#include <fcntl.h>
 
 const char *argp_program_version = "Stop Smoking with Polybar";
 const char *argp_program_bug_address = "https://github.com/fredtux/STOP_Smoking_Polybar/issues";
@@ -92,6 +93,9 @@ int main(int argc, char *argv[]) {
     /* Open config file for write */
     strcat(configFilePath, configDirPath);
     strcat(configFilePath, "/config");
+    int filehandle = open (configFilePath, O_CREAT, 0755);
+    close(filehandle);
+
     if ((confFile = fopen(configFilePath, "w+")) == NULL) {
         perror("Could not open config file at: $HOME/.config/stopsmoking/config");
         exit(EXIT_FAILURE);

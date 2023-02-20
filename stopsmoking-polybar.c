@@ -101,8 +101,12 @@ int main() {
                     printcounter();
                     lastMax = __INT_MAX__;
                 } else if (c < lastMax) {
-                    while (!__sync_val_compare_and_swap(&counter, counter, counter + 1))
+                    if(counter == 0)
+                        while (!__sync_val_compare_and_swap(&counter, counter, 1))
                         ;
+                    else
+                        while (!__sync_val_compare_and_swap(&counter, counter, counter + 1))
+                            ;
                     printcounter();
                     lastMax = c;
                 }
