@@ -99,8 +99,6 @@ void readConfigData(unsigned *cigarettes, unsigned *starthour, unsigned *finishh
     }
 
     fclose(confFile);
-
-    syslog(LOG_ALERT, "|||||%ld", *datelastquit);
 }
 
 void updateInConfig(unsigned cigarettes, unsigned starthour, unsigned finishhour, unsigned today, time_t dateadded, time_t *dateupdated, time_t datelastquit) {
@@ -216,8 +214,7 @@ void tryToQuit(unsigned probabilityToSmoke, time_t *datelastquit, unsigned *ciga
     // struct tm tm2 = *localtime(&t2);
 
     int diff = difftime(t, t2) / (60 * 60 * 24);
-    syslog(LOG_ALERT, "%f: %ld//%ld", difftime(t, t2), t, t2);
-
+    
     if (diff >= 2) {
         srand(time(NULL));
         int quit = (rand() % 100) < (double)probabilityToSmoke / 2;
