@@ -4,7 +4,7 @@ After=network.target
 
 [Service]
 Type=forking
-ExecStart=~/STOP_Smoking_Polybar/stopsmoking
+ExecStart=~/stopsmoking
 StandardOutput=append:/var/log/stopsmoking1.log
 StandardError=append:/var/log/stopsmoking2.log
 StandardInput=null
