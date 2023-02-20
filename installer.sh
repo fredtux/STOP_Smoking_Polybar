@@ -44,3 +44,6 @@ sudo chown root:root /etc/systemd/system/stopsmoking.service
 
 echo "Enable service"
 sudo systemctl enable stopsmoking
+
+echo "Start service"
+sudo systemctl start stopsmoking
