@@ -2,7 +2,7 @@
 **Let's hope we're all gonna quit smoking :) But until then, you can use this nice program to reduce the number of cigarettes. It will tell you when to smoke and pull cigarettes out without you knowing. I'm trying it on me as well, so feel free to share your results**
 
 ## How it looks like
-Screenshot made using "shades" theme from: [https://github.com/adi1090x/polybar-themes](https://github.com/adi1090x/polybar-themes)
+Screenshot made using "shapes" theme from: [https://github.com/adi1090x/polybar-themes](https://github.com/adi1090x/polybar-themes)
 
 ![Screenshot](https://github.com/fredtux/STOP_Smoking_Polybar/blob/main/Screenshot.png?raw=true)
 
