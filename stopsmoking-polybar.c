@@ -7,17 +7,127 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <time.h>
 
 volatile sig_atomic_t counter = 0, lastMax = __INT_MAX__, printflag = 1;
 
+void readConfigData(unsigned *cigarettes, unsigned *starthour, unsigned *finishhour, unsigned *today, time_t *dateadded, time_t *dateupdated, time_t *datelastquit) {
+    /* Files */
+    FILE *confFile;
+    char home[64] = "/home/";
+    strcat(home, getenv("USER"));
+    char configFilePath[256] = "";
+
+    /* Open config file */
+    strcat(configFilePath, home);
+    strcat(configFilePath, "/.config/stopsmoking/config");
+
+    if ((confFile = fopen(configFilePath, "r")) == NULL) {
+        printf("Can't open config file. EXIT");
+        exit(EXIT_FAILURE);
+    }
+
+    /* Read into variables */
+    char tmp[256] = "";
+    if (feof(confFile) || fscanf(confFile, "%[^=]=%u\n", tmp, cigarettes) != 2) {
+        printf("Illegal config file. EXIT");
+        fclose(confFile);
+        exit(EXIT_FAILURE);
+    }
+    if (feof(confFile) || fscanf(confFile, "%[^=]=%u", tmp, starthour) != 2) {
+        printf("Illegal config file. EXIT");
+        fclose(confFile);
+        exit(EXIT_FAILURE);
+    }
+    if (feof(confFile) || fscanf(confFile, "%[^=]=%u", tmp, finishhour) != 2) {
+        printf("Illegal config file. EXIT");
+        fclose(confFile);
+        exit(EXIT_FAILURE);
+    }
+    if (feof(confFile) || fscanf(confFile, "%[^=]=%u", tmp, today) != 2) {
+        printf("Illegal config file. EXIT");
+        fclose(confFile);
+        exit(EXIT_FAILURE);
+    }
+    if (feof(confFile) || fscanf(confFile, "%[^=]=%lu", tmp, dateadded) != 2) {
+        printf("Illegal config file. EXIT");
+        fclose(confFile);
+        exit(EXIT_FAILURE);
+    }
+    if (feof(confFile) || fscanf(confFile, "%[^=]=%lu", tmp, dateupdated) != 2) {
+        printf("Illegal config file. EXIT");
+        fclose(confFile);
+        exit(EXIT_FAILURE);
+    }
+    if (feof(confFile) || fscanf(confFile, "%[^=]=%lu", tmp, datelastquit) != 2) {
+        printf("Illegal config file. EXIT");
+        fclose(confFile);
+        exit(EXIT_FAILURE);
+    }
+
+    fclose(confFile);
+}
+
+void initCounter(){
+    /* Smoking variables */
+    unsigned cigarettes;
+    unsigned starthour;
+    unsigned finishhour;
+    unsigned today;
+    time_t dateadded;
+    time_t dateupdated;
+    time_t datelastquit;
+
+    readConfigData(&cigarettes, &starthour, &finishhour, &today, &dateadded, &dateupdated, &datelastquit);
+
+    /* Current time */
+    time_t t = time(NULL);
+    struct tm tm = *localtime(&t);
+
+    /* Date updated */
+    time_t t2 = dateupdated;
+    struct tm tm2 = *localtime(&t2);
+
+    if(tm2.tm_yday == tm.tm_yday || tm2.tm_year == tm.tm_year){
+        int nowCounter = -1;
+
+        /* Files */
+        char home[64] = "/home/";
+        strcat(home, getenv("USER"));
+        char counterFile[256] = "";
+
+        /* Open config file */
+        strcat(counterFile, home);
+        strcat(counterFile, "/.config/stopsmoking/stopsmokingcounter");
+
+        FILE *cf = fopen(counterFile, "r");
+        if(cf == (void *)0)
+            return;
+
+        fscanf(cf, "%d", &nowCounter);
+        if(nowCounter > 0)
+            counter = nowCounter;
+        fclose(cf);
+    }
+}
+
 void printcounter() {
     if (printflag) {
-        FILE *counterFile = fopen("/tmp/stopsmokingcounter", "w+");
+        /* Files */
+        char home[64] = "/home/";
+        strcat(home, getenv("USER"));
+        char counterFile[256] = "";
 
-        fprintf(counterFile, "%d", counter);
-        fflush(counterFile);
+        /* Open config file */
+        strcat(counterFile, home);
+        strcat(counterFile, "/.config/stopsmoking/stopsmokingcounter");
 
-        fclose(counterFile);
+        FILE *cf = fopen(counterFile, "w+");
+
+        fprintf(cf, "%d", counter);
+        fflush(cf);
+
+        fclose(cf);
     }
 }
 
@@ -85,6 +195,7 @@ int main() {
         exit(EXIT_FAILURE);
     }
 
+    initCounter();
     printcounter();
 
     for (int tries = 0; tries < 10; ++tries) {
