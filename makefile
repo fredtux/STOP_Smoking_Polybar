@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -g -Wall
+CFLAGS = -Wall
 LFLAGS =
 
 .PHONY: all clean
