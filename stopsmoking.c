@@ -172,8 +172,8 @@ void computeSleepTime(unsigned *sleepTime, unsigned *probabilityToSmoke, unsigne
     }
 
     if (remaining > 0) {
-        *probabilityToSmoke = (unsigned)(60 * today / (remaining));
-        *sleepTime = *probabilityToSmoke * 60;
+        *probabilityToSmoke = 25;
+        *sleepTime = (unsigned)(60 * today / (remaining)) * 60 / 4;
     } else {
         *probabilityToSmoke = 0;
         *sleepTime = 30 * 60;
