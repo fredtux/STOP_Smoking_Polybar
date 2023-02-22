@@ -16,6 +16,7 @@ echo "Remove configurer"
 rm /usr/bin/stopsmoking-config
 
 echo "Remove polybar client"
+pkill stopsmoking-pol
 rm /usr/bin/stopsmoking-polybar
 
 echo "Remove polybar module script"

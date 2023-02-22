@@ -26,6 +26,7 @@ sudo chown root:root /usr/bin/stopsmoking-config
 sudo chmod +x /usr/bin/stopsmoking-config
 
 echo "Copy polybar client"
+pkill stopsmoking-pol
 sudo cp stopsmoking-polybar /usr/bin/stopsmoking-polybar
 sudo chown root:root /usr/bin/stopsmoking-polybar
 sudo chmod +x /usr/bin/stopsmoking-polybar
@@ -46,4 +47,4 @@ echo "Enable service"
 sudo systemctl enable stopsmoking
 
 echo "Start service"
-sudo systemctl start stopsmoking
+sudo systemctl restart stopsmoking
