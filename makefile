@@ -19,7 +19,7 @@ stopsmoking-polybar: stopsmoking-polybar.c
 	$(CC) $(CFLAGS) -D_XOPEN_SOURCE=700 -o stopsmoking-polybar stopsmoking-polybar.c $(LFLAGS)
 
 clean:
-	$(RM) stopsmoking-config stopsmoking example-fifo stopsmoking-polybar stopsmoking.service
+	$(RM) stopsmoking-config stopsmoking example-fifo stopsmoking-polybar stopsmoking.service run_polybar_stopsmoking.sh
 
 install:
 	./installer.sh

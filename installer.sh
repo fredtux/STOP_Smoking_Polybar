@@ -15,6 +15,29 @@ User=${USER}
 [Install]
 WantedBy=multi-user.target"> stopsmoking.service
 
+echo "if ! pgrep stopsmoking-pol > /dev/null
+then
+    stopsmoking-polybar &
+fi
+
+GREEN='\033[0;32m' 
+RED='\033[0;31m'
+NC='\033[0m' # No Color
+counter=\$(cat /home/$USER/.config/stopsmoking/stopsmokingcounter)
+echo \$counter
+
+if [ -z \$counter ]
+then
+    echo \"\${GREEN}✓ 0\${NC}\"
+else
+    if [ \$counter = \"0\" ]
+    then
+        echo \"\${GREEN}✓ \${counter}\${NC}\"
+    else
+        echo \"\${RED}⚠ \${counter}\${NC}\"
+    fi
+fi" > run_polybar_stopsmoking.sh
+
 echo "Copy service"
 sudo cp stopsmoking /usr/bin/stopsmoking
 sudo chown root:root /usr/bin/stopsmoking
