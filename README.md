@@ -4,7 +4,8 @@
 ## How it looks like
 Screenshot made using "shapes" theme from: [https://github.com/adi1090x/polybar-themes](https://github.com/adi1090x/polybar-themes)
 
-![Screenshot](https://github.com/fredtux/STOP_Smoking_Polybar/blob/main/Screenshot.png?raw=true)
+![Screenshot](https://github.com/fredtux/STOP_Smoking_Polybar/blob/main/ScreenshotRed.png?raw=true)
+![Screenshot](https://github.com/fredtux/STOP_Smoking_Polybar/blob/main/ScreenshotGreen.png?raw=true)
 
 ## How to install it
 ```bash
