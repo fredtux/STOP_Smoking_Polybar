@@ -197,7 +197,7 @@ void tryToSmoke(unsigned probabilityToSmoke, unsigned cigarettes, unsigned start
     srand(time(NULL));
     int smoke = (rand() % 100) < probabilityToSmoke;
 
-    if (smoke) {
+    if (smoke && *today) {
         tellToSmoke(*today);
         --(*today);
         updateInConfig(cigarettes, starthour, finishhour, *today, dateadded, dateupdated, datelastquit);
@@ -218,7 +218,7 @@ void tryToQuit(unsigned probabilityToSmoke, time_t *datelastquit, unsigned *ciga
     if (diff >= 2) {
         srand(time(NULL));
         int quit = (rand() % 100) < (double)probabilityToSmoke / 2;
-        if (quit) {
+        if (quit && *cigarettes) {
             logOutputMsg("Quitted 1 cigarette!!!");
             --(*cigarettes);
             *datelastquit = t;
