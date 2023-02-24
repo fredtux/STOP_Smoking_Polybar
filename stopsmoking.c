@@ -287,7 +287,11 @@ void checkDayChange(unsigned *sleepTime, unsigned *probabilityToSmoke, unsigned 
     if (*probabilityToSmoke != 0 && tm.tm_yday == tm2.tm_yday && tm.tm_year == tm2.tm_year)
         return;
 
+    *today = cigarettes;
+    resetpipe();
     computeSleepTime(sleepTime, probabilityToSmoke, cigarettes, starthour, finishhour, *today, dateadded, dateupdated, datelastquit);
+
+    
 }
 
 int main(void) {
